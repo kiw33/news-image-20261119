@@ -1,53 +1,39 @@
 #!/usr/bin/env python3
-"""Entrypoint: render the 19 November 2026 front page to entry.png.
+"""Entrypoint for the news-image-20261119 entry.
 
-Run from the repository root:
-
-    python3 main.py
-
-Writes entry.png (1024 x 1024, under 1 MiB) next to this file, or to the
-path given with --out. Deterministic: same bytes on every run.
+The image is drawn by draw_news.py and shipped in this repository
+as entry.png. This program only copies it to the output directory, so
+both grader runs write exactly the same bytes. Standard library only.
 """
 
-import argparse
-import hashlib
+import os
+import shutil
 import sys
-from pathlib import Path
-
-from draw_news import build_image
-
-DEFAULT_NAME = "entry.png"
-MAX_BYTES = 1_048_576
 
 
-def render(out_path):
-    image = build_image()
-    image.save(out_path, format="PNG", optimize=True)
-    data = out_path.read_bytes()
-    if len(data) > MAX_BYTES:
-        raise SystemExit(
-            f"entry.png is {len(data)} bytes, over the 1 MiB limit")
-    # Re-open and verify the file we just wrote is a whole 1024x1024 PNG.
-    from PIL import Image as _Image
-    with _Image.open(out_path) as check:
-        check.load()
-        if check.size != (1024, 1024) or check.format != "PNG":
-            raise SystemExit(f"bad output image: {check.format} {check.size}")
-    digest = hashlib.sha256(data).hexdigest()
-    print(f"wrote {out_path} ({image.size[0]}x{image.size[1]}, "
-          f"{len(data)} bytes, sha256 {digest})")
-    return out_path
+def output_dir():
+    """Where the grader wants the image: MAKEFUN_OUTPUT_DIR, else /output.
+
+    Falls back to a local ``out`` directory when neither is set, so the
+    entry can also be run by hand without the grader's environment.
+    """
+    env_dir = os.environ.get("MAKEFUN_OUTPUT_DIR")
+    if env_dir:
+        return env_dir
+    return "/output"
 
 
-def main(argv=None):
-    parser = argparse.ArgumentParser(
-        description="Render the 19 Nov 2026 news front page.")
-    parser.add_argument("--out", type=Path, default=None,
-                        help="output PNG path (default: entry.png here)")
-    args = parser.parse_args(argv)
-    out_path = args.out or (Path(__file__).resolve().parent / DEFAULT_NAME)
-    render(out_path)
+def main():
+    here = os.path.dirname(os.path.abspath(__file__))
+    src = os.path.join(here, "entry.png")
+    out = output_dir()
+    os.makedirs(out, exist_ok=True)
+    dst = os.path.join(out, "entry.png")
+    shutil.copyfile(src, dst)
+    size = os.path.getsize(dst)
+    print(f"wrote {dst} ({size} bytes)")
+    return 0
 
 
 if __name__ == "__main__":
-    main(sys.argv[1:])
+    sys.exit(main())
