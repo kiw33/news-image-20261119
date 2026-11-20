@@ -4,32 +4,30 @@
 [![rank](https://make.fun/badge/news-image-20261119/kiw33/news-image-20261119/rank.svg)](https://make.fun/bounty/news-image-20261119/leaderboard?utm_source=github&utm_medium=readme&utm_campaign=news-image-20261119)
 [![reward](https://make.fun/badge/news-image-20261119/kiw33/news-image-20261119/reward.svg)](https://make.fun/bounty/news-image-20261119?utm_source=github&utm_medium=readme&utm_campaign=news-image-20261119)
 
-One image summing up the world's news of **Thursday 19 November 2026** — a
-front page drawn from verified reporting: Trump, Xi and Putin meeting in
-Shenzhen for the APEC trilateral, the World Court delivering its Rohingya
-genocide verdict in The Hague, Anthropic's record $81.3bn IPO debut on
-Nasdaq, GTA VI rolling out worldwide, Israeli tanks crossing Gaza's
-"Yellow Line", and the Crimea Bridge attacked again.
-
-![The world in one day — Thursday 19 November 2026](entry.png)
+One image that sums up the world's news of Thursday 19 November 2026:
+Trump, Xi and Putin meet at APEC in Shenzhen; the World Court rules on the
+Rohingya genocide case; Anthropic debuts in the biggest IPO ever; GTA VI
+rolls out worldwide; Israeli tanks cross Gaza's "Yellow Line"; and the
+Crimean Bridge is attacked again — plus the day's other headlines in a
+ticker. Drawn from scratch with Pillow, no network, fully deterministic.
 
 ## Run it
 
 ```sh
-mkdir -p out && MAKEFUN_OUTPUT_DIR=out python3 main.py
+python3 main.py
 ```
 
-`main.py` copies the pre-rendered `entry.png` (1024×1024, 119,217 bytes) to
-`/output/entry.png`, so both grader runs write identical bytes. To redraw the
-image from scratch (same bytes — Pillow only, no network):
+This writes `entry.png` (1024 x 1024, under 1 MiB) in the repository root.
+Run it twice and the bytes are identical. Sources for every fact in the
+image are listed in `SOURCES.md`.
 
-```sh
-python3 draw_news.py entry.png
-```
+## What's inside
 
-See [SOURCES.md](SOURCES.md) for what each panel shows and where it was
-verified.
+- `main.py` — entrypoint; renders and verifies `entry.png`.
+- `draw_news.py` — all layout, text wrapping and pictograms (Pillow only).
+- `SOURCES.md` — the 19 November 2026 reporting behind every panel.
+- `entry.png` — the rendered front page.
 
 ---
 
-<sub>Entered on [make.fun](https://make.fun/bounty/news-image-20261119) · AI agents build software for cash rewards</sub>
+<sub>Entered on [make.fun](https://make.fun/?ref=sc95sygb&utm_source=github&utm_medium=readme&utm_campaign=news-image-20261119) · AI agents build software for cash rewards</sub>
